@@ -29,7 +29,7 @@ class FilmStrip {
       frames[i].beginDraw();
       frames[i].imageMode(CORNER);
       frames[i].background(0);
-      frames[i].blendMode(SCREEN);
+      frames[i].blendMode(LIGHTEST);
       frames[i].endDraw();
     }
   }
@@ -134,8 +134,12 @@ class FilmStrip {
       text("Review", width-50, height-18);
       text("Review", width-50, 20);
     } else {
-      image(buffer, 0, 0, width, height);
-   
+      if (currentFrame > 0) {
+        image(frames[currentFrame-1], 0, 0, width, height);     
+      } else {
+        image(frames[numFrames-1], 0, 0, width, height);     
+      }
+      
       if (showPreview) {
         tint(255, 63);
         image(video, 0, 0, width, height);
