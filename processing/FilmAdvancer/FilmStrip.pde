@@ -29,7 +29,7 @@ class FilmStrip {
       frames[i].beginDraw();
       frames[i].imageMode(CORNER);
       frames[i].background(0);
-      frames[i].blendMode(ADD);
+      frames[i].blendMode(SCREEN);
       frames[i].endDraw();
     }
   }
