@@ -1,5 +1,4 @@
 FilmStrip filmStrip;
-boolean showPreview = true;
 
 void setup() {
   size(1280, 720, P2D);
@@ -12,11 +11,13 @@ void setup() {
 void draw() {
   background(0);
   
-  filmStrip.run();
+  if (keyPressed) {
+    if (key == ' ' && filmStrip.reviewMode) filmStrip.frameAdvance(); 
   
-  if (showPreview) {
-    tint(255, 63);
-    image(video, 0, 0, width, height);
-    tint(255);
+    if (keyCode == LEFT) filmStrip.frameOffsetLeft();
+  
+    if (keyCode == RIGHT) filmStrip.frameOffsetRight();
   }
+  
+  filmStrip.run(); 
 }

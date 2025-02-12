@@ -3,13 +3,17 @@ class FilmStrip {
   int numFrames = 36;
   int frameW, frameH;
   int frameOffset = 0;
+  int frameOffsetStep = 10;
   int currentFrame = 0;
+  int reviewFrame = 0;
   
   PGraphics[] frames = new PGraphics[numFrames];
   PGraphics buffer;
   
   boolean armCapture = false;
   boolean reviewMode = false;
+  boolean showPreview = true;
+  
   int markTime = 0;
   
   FilmStrip(int _frameW, int _frameH) {
@@ -57,30 +61,87 @@ class FilmStrip {
         buffer.image(frames[0], buffer.width - frameOffset, 0);     
       }
       buffer.endDraw();
-    
+      
+      frames[currentFrame].beginDraw();
+      frames[currentFrame].image(buffer, 0, 0, frames[currentFrame].width, frames[currentFrame].height);
+      frames[currentFrame].endDraw();
+      
       frameAdvance();
       armCapture = false;
     }
   }
   
+  void frameCapture() {
+      armCapture = true;
+  }
+  
   void frameAdvance() {
+    if (reviewMode) {
+      reviewFrame++;
+      if (reviewFrame > numFrames-1) {
+        reviewFrame = 0;
+      }
+    } else {
       currentFrame++;
       if (currentFrame > numFrames-1) {
         currentFrame = 0;
-        frameOffset = 0;
       }
-      println("Current frame: " + currentFrame);
+    }
+    
+    println("Current frame: " + currentFrame + ", Review frame: " + reviewFrame + ", Offset: " + frameOffset);
+  }
+  
+  void toggleReviewMode() {
+    reviewMode = !reviewMode;
+    reviewFrame = currentFrame;
+  }
+  
+  void togglePreview() {
+    showPreview = !showPreview;
+  }
+  
+  void frameOffsetLeft() {
+    frameOffset += 10;
+    if (frameOffset > frameW) frameOffset = frameW;
+  }
+  
+  void frameOffsetRight() {
+    frameOffset -= 10;
+    if (frameOffset < -frameW) frameOffset = -frameW;
   }
   
   void draw() {
     if (reviewMode) {
-      if (currentFrame > 0) {
-        image(frames[currentFrame-1], 0, 0, width, height);
+      if (reviewFrame > 0) {
+        image(frames[reviewFrame-1], 0, 0, width, height);     
       } else {
-        image(frames[numFrames-1], 0, 0, width, height);
+        image(frames[numFrames-1], 0, 0, width, height);     
       }
+      fill(0);
+      text("Review ... " + reviewFrame, 12, 22);
+      text("Review", 12, height-20);
+      text("Review", width-52, height-20);
+      text("Review", width-52, 22);
+      fill(255);
+      text("Review ... " + reviewFrame, 10, 20);
+      text("Review", 10, height-18);
+      text("Review", width-50, height-18);
+      text("Review", width-50, 20);
     } else {
       image(buffer, 0, 0, width, height);
+   
+      if (showPreview) {
+        tint(255, 63);
+        image(video, 0, 0, width, height);
+        
+        stroke(0, 127, 127);       
+        line(width/2, 0, width/2, height);
+        
+        stroke(255, 127, 0);
+        line(width/2 - frameOffset, 0, width/2 - frameOffset, height);
+        
+        tint(255);
+      }
     }
   }
   
