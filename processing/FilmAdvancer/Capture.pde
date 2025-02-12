@@ -1,8 +1,8 @@
 import processing.video.*;
 
 Capture video;
-int camW = 640;
-int camH = 480;
+int camW = 1280;
+int camH = 720;
 int camFps = 30;
 int captureIndex = 0;
 

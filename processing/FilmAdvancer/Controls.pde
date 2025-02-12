@@ -1,9 +1,14 @@
 void keyPressed() {
-  if (key == ' ') filmStrip.armCapture = true;
+  if (key == ' ') {
+    if(filmStrip.reviewMode) {
+      filmStrip.armCapture = true;
+    } else {
+      filmStrip.frameAdvance();
+    }
+  }
   
-  if (key == 'z') filmStrip.reviewMode = !filmStrip.reviewMode;
-  
-  if (key == 'x') filmStrip.frameAdvance();
+  if (key == 'z') filmStrip.reviewMode = !filmStrip.reviewMode; 
+  if (key == 'x') showPreview = !showPreview;
 
   if (keyCode == LEFT) filmStrip.frameOffset -= 10;
 

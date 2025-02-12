@@ -1,19 +1,22 @@
 FilmStrip filmStrip;
+boolean showPreview = true;
 
 void setup() {
-  size(1280, 960, P2D);
+  size(1280, 720, P2D);
   
   setupCapture(); 
   
-  filmStrip = new FilmStrip();
+  filmStrip = new FilmStrip(camW, camH);
 }
 
 void draw() {
   background(0);
   
-  tint(255);
   filmStrip.run();
   
-  tint(255, 63);
-  image(video, 0, 0, width, height);
+  if (showPreview) {
+    tint(255, 63);
+    image(video, 0, 0, width, height);
+    tint(255);
+  }
 }
