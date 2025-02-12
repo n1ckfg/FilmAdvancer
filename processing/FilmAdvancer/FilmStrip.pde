@@ -66,7 +66,7 @@ class FilmStrip {
       frames[currentFrame].image(buffer, 0, 0, frames[currentFrame].width, frames[currentFrame].height);
       frames[currentFrame].endDraw();
       
-      frameAdvance();
+      frameAdvance(true);
       armCapture = false;
     }
   }
@@ -75,16 +75,22 @@ class FilmStrip {
       armCapture = true;
   }
   
-  void frameAdvance() {
+  void frameAdvance(boolean _b) {
     if (reviewMode) {
-      reviewFrame++;
-      if (reviewFrame > numFrames-1) {
-        reviewFrame = 0;
+      if (_b) {
+        reviewFrame++;
+        if (reviewFrame > numFrames-1) reviewFrame = 0;
+      } else {
+        reviewFrame--;
+        if (reviewFrame < 0) reviewFrame = numFrames-1;
       }
     } else {
-      currentFrame++;
-      if (currentFrame > numFrames-1) {
-        currentFrame = 0;
+      if (_b) {
+        currentFrame++;
+        if (currentFrame > numFrames-1) currentFrame = 0;
+      } else {
+        currentFrame--;
+        if (currentFrame < 0) currentFrame = numFrames-1;
       }
     }
     
