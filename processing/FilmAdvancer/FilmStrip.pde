@@ -8,7 +8,6 @@ class FilmStrip {
   int reviewFrame = 0;
   
   PGraphics[] frames = new PGraphics[numFrames];
-  PGraphics buffer;
   
   boolean armCapture = false;
   boolean reviewMode = false;
@@ -19,10 +18,6 @@ class FilmStrip {
   FilmStrip(int _frameW, int _frameH) {
     frameW = _frameW;
     frameH = _frameH;
-    buffer = createGraphics(frameW, frameH, P2D);
-    buffer.beginDraw();
-    buffer.background(0);
-    buffer.endDraw();
     
     for (int i=0; i<numFrames; i++) {
       frames[i] = createGraphics(frameW, frameH, P2D);
@@ -36,35 +31,25 @@ class FilmStrip {
 
   void update() {
     if (armCapture) {          
-      buffer.beginDraw();
       if (currentFrame < numFrames-1) {
         frames[currentFrame].beginDraw();
         frames[currentFrame].image(video, -frameOffset, 0, frameW, frameH);
+        frames[currentFrame].image(video, frameW - frameOffset, 0, frameW, frameH);
         frames[currentFrame].endDraw();
         
         frames[currentFrame+1].beginDraw();
-        frames[currentFrame+1].image(video, frameW - frameOffset, 0, frameW, frameH);
-        frames[currentFrame+1].endDraw();
-        
-        buffer.image(frames[currentFrame], -frameOffset, 0);
-        buffer.image(frames[currentFrame+1], buffer.width - frameOffset, 0);     
+        frames[currentFrame+1].image(video, -frameW + frameOffset, 0, frameW, frameH);
+        frames[currentFrame+1].endDraw();        
       } else {
         frames[currentFrame].beginDraw();
         frames[currentFrame].image(video, -frameOffset, 0, frameW, frameH);
+        frames[0].image(video, frameW - frameOffset, 0, frameW, frameH);
         frames[currentFrame].endDraw();
         
         frames[0].beginDraw();
-        frames[0].image(video, frameW - frameOffset, 0, frameW, frameH);
+        frames[0].image(video, -frameW + frameOffset, 0, frameW, frameH);
         frames[0].endDraw();
-        
-        buffer.image(frames[currentFrame], -frameOffset, 0);
-        buffer.image(frames[0], buffer.width - frameOffset, 0);     
       }
-      buffer.endDraw();
-      
-      frames[currentFrame].beginDraw();
-      frames[currentFrame].image(buffer, 0, 0, frames[currentFrame].width, frames[currentFrame].height);
-      frames[currentFrame].endDraw();
       
       frameAdvance(true);
       armCapture = false;
